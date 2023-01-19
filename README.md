@@ -3,12 +3,14 @@
 **WARNING! Attaching a debugger to a process may cause the process to hang, which can disrupt
 prduction services.**
 
-Assumptions:
+## Assumptions
 
 * We have a Go service we want to debug running inside a Docker container on a k8s cluster.
 * The `dlv` binary exists in the container image of the Go service. Alternatively, you can copy a
   `dlv` binary for the correct architecture to the pod using `kubectl cp`.
 * You are OK with disrupting the remote process while debugging.
+
+## Instructions
 
 Build and deploy the sample service:
 

@@ -3,4 +3,4 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest
 COPY . /code
 WORKDIR /code
 RUN go build -o /sample-app .
-ENTRYPOINT [ "/go/bin/dlv" , "--listen=:2345", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/sample-app"]
+ENTRYPOINT [ "/go/bin/dlv" , "--listen=0.0.0.0:50100", "--headless=true", "--only-same-user=false", "--accept-multiclient", "--check-go-version=false", "exec", "/sample-app"]

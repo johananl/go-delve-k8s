@@ -50,10 +50,7 @@ Wire VS Code to the remote debugger using the following debug config:
     "mode": "remote",
     "remotePath": "",
     "port": 2345,
-    "host": "127.0.0.1",
-    "showLog": true,
-    "trace": "log",
-    "logOutput": "rpc"
+    "host": "127.0.0.1"
 }
 ```
 

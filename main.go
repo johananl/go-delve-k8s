@@ -71,7 +71,7 @@ func genRandomString(in int) (string, error) {
 	var out string
 
 	for i := 0; i < 5; i++ {
-		// Generate a random rune in the 97-122 ASCII range.
+		// Generate a random rune in the 97-122 ASCII range (a-z).
 		offset := rand.Intn(26)
 		c := 97 + offset
 		out += string(c)

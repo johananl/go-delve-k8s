@@ -6,6 +6,7 @@ This guide demonstrates how to debug a Go microservice running in a pod on k8s u
 
 * VS Code
 * Go
+* Delve
 * Docker
 * kubectl
 * A running k8s cluster

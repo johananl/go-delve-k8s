@@ -1,30 +1,33 @@
 # Debugging Go k8s services with Delve
 
-**WARNING! Attaching a debugger to a process may cause the process to hang, which can disrupt
-production services.**
+This guide demonstrates how to debug a Go microservice running in a pod on k8s using VS Code.
 
-## Assumptions
+## Requirements
 
-* You have a Go service you want to debug running inside a Docker container on a k8s cluster.
-* The `dlv` binary exists in the container image of the Go service. Alternatively, you can copy a
-  `dlv` binary for the correct architecture to the pod using `kubectl cp`.
-* You are OK with disrupting the remote process while debugging.
+* VS Code
+* Go
+* Docker
+* kubectl
+* A running k8s cluster
 
 ## Instructions
 
-Build and deploy the sample service:
+Build and push the sample service to a Docker repository:
 
 ```
-kind create cluster
-docker build -t sample-app .
-kind load docker-image sample-app
+IMAGE=quay.io/foo/bar
+docker build -t $IMAGE .
+docker push $IMAGE
+```
+
+>NOTE: If you're using [kind](https://kind.sigs.k8s.io/) as your k8s cluster, instead of pushing
+>the image you can use `kind load docker-image $IMAGE` to load the image into your cluster locally.
+
+Deploy the sample service:
+
+```
+sed -i "s|<image_placeholder>|$IMAGE|" deployment.yaml
 kubectl apply -f deployment.yaml
-```
-
-Start a remote debugger:
-
-```
-kubectl exec -it $(kubectl get pods -l app=sample-app -oname) -- dlv attach 1 --listen :2345 --headless --accept-multiclient
 ```
 
 Enable port forwarding for both the sample service and Delve:
@@ -54,9 +57,17 @@ Wire VS Code to the remote debugger using the following debug config:
 }
 ```
 
-Start a debugging session in VS Code by clicking the |> button or hitting F5.
+Start a debugging session in VS Code by clicking the |> button or hitting F5. VS Code should attach
+to the remove Delve process inside the pod, which in turn should make Delve start the Go service
+and begin debugging.
 
-## Caveats
+## Notes and caveats
 
-* Go service should be built with debug information.
-* Local code must match remote code.
+**Go service should be built with debug information.** By default, Go optimizes binaries by
+stripping away debug information. This can render certain information unavailable to Delve when
+debugging. To avoid stripping debug information, use the following flags when building the Go
+binary: `-gcflags "all=-N -l"`
+
+
+**Local code must match remote code.** Delve may behave unexpectedly when the code revision in VS
+Code differs from the one running on k8s.

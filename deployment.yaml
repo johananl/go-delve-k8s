@@ -13,7 +13,7 @@ spec:
         app: sample-app
     spec:
       containers:
-        - image: sample-app
+        - image: <image_placeholder>
           imagePullPolicy: Always
           name: sample-app
           ports:
